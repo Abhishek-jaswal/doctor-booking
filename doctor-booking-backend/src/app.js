@@ -4,6 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import doctorRoutes from './routes/doctor.js';
+import appointmentRoutes from './routes/appointment.js';
+
 
 
 import authRoutes from './routes/auth.js';
@@ -19,6 +21,9 @@ app.use(express.json());          // Parse JSON request bodies
 app.use('/api/auth', authRoutes);
 
 app.use('/api/doctors', doctorRoutes);
+
+app.use('/api/appointments', appointmentRoutes);
+
 
 // Simple root endpoint to check server running status
 app.get('/', (req, res) => {
