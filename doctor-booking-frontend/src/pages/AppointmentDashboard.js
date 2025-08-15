@@ -32,6 +32,16 @@ function AppointmentDashboard({ patientId, onBack }) {
           </li>
         ))}
       </ul>
+
+      <ul>
+  {appointments.map(appt => (
+    <li key={appt.id}>
+      Dr. {appt.doctor_name} — {new Date(appt.start_time).toLocaleString()}
+      {" "} | Status: {appt.status}
+    </li>
+  ))}
+</ul>
+
     </div>
   );
 }
