@@ -9,15 +9,19 @@ export default function SlotPicker({ doctorId, patientId, onBack }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (doctorId) {
+    async function load() {
       setLoading(true);
       setError("");
-      api
-        .get(`/doctors/${doctorId}/slots`)
-        .then((res) => setSlots(res.data))
-        .catch(() => setError("Unable to fetch slots"))
-        .finally(() => setLoading(false));
+      try {
+        const res = await api.get(`/doctors/${doctorId}/slots`);
+        setSlots(res.data);
+      } catch (e) {
+        setError(e?.response?.data?.message || "Failed to load slots");
+      } finally {
+        setLoading(false);
+      }
     }
+    if (doctorId) load();
   }, [doctorId]);
 
   async function handleLock(slotId) {
@@ -26,14 +30,12 @@ export default function SlotPicker({ doctorId, patientId, onBack }) {
       await api.post("/appointments/lock-slot", { slotId });
       setSelectedSlot(slotId);
       setLocked(true);
-      alert("Slot locked for 5 minutes. Please confirm booking.");
-    } catch {
-      setError("Slot unavailable or already locked");
+    } catch (e) {
+      setError(e?.response?.data?.message || "Failed to lock slot");
     }
   }
 
   async function handleConfirm() {
-    if (!selectedSlot) return;
     setError("");
     try {
       await api.post("/appointments/confirm", {
@@ -41,32 +43,30 @@ export default function SlotPicker({ doctorId, patientId, onBack }) {
         doctorId,
         slotId: selectedSlot,
       });
-      alert("Booking confirmed!");
+      alert("Appointment confirmed!");
       setLocked(false);
       setSelectedSlot(null);
-      onBack();
-    } catch {
-      setError("Booking failed");
+      const res = await api.get(`/doctors/${doctorId}/slots`);
+      setSlots(res.data);
+    } catch (e) {
+      setError(e?.response?.data?.message || "Failed to confirm booking");
     }
   }
 
   return (
     <div>
-      <button onClick={onBack}>⬅ Back to Doctors</button>
-      <h2>Available Slots</h2>
-
-      {loading && <p>Loading slots...</p>}
+      <button onClick={onBack}>← Back</button>
+      <h3>Available Slots</h3>
+      {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
-
       <ul>
-        {slots.map((slot) => (
+        {slots.map(slot => (
           <li key={slot.id}>
-            {new Date(slot.start_time).toLocaleString()}{" "}
-            <button onClick={() => handleLock(slot.id)}>Lock Slot</button>
+            {new Date(slot.start_time).toLocaleString()} — {new Date(slot.end_time).toLocaleString()}{" "}
+            <button onClick={() => handleLock(slot.id)}>Lock</button>
           </li>
         ))}
       </ul>
-
       {locked && (
         <button style={{ marginTop: 10 }} onClick={handleConfirm}>
           Confirm Booking (Mock OTP)

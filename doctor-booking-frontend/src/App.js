@@ -4,98 +4,76 @@ import Login from "./pages/Login";
 import DoctorDiscovery from "./pages/DoctorDiscovery";
 import SlotPicker from "./pages/SlotPicker";
 import AppointmentDashboard from "./pages/AppointmentDashboard";
-import AdminPanel from "./pages/AdminPanel"; // Import your admin panel component
+import AdminPanel from "./pages/AdminPanel";
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [page, setPage] = useState(token ? "doctors" : "login");
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
-  // Simple JWT decode helper to extract user ID and role
   function getUserInfo() {
     if (!token) return null;
     try {
-      return JSON.parse(atob(token.split(".")[1]));
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload; // { id, role, iat, exp }
     } catch {
       return null;
     }
   }
   const userInfo = getUserInfo();
-  const patientId = userInfo?.id || null;
-  const userRole = userInfo?.role || "patient";
+  const patientId = userInfo?.id;
+  const userRole = userInfo?.role;
 
-  function logout() {
+  function handleLogin(tok) {
+    localStorage.setItem("token", tok);
+    setToken(tok);
+    setPage("doctors");
+  }
+
+  function handleLogout() {
     localStorage.removeItem("token");
     setToken("");
     setPage("login");
   }
 
-  if (!token) {
-    return (
-      <>
-        {page === "login" ? (
-          <>
-            <Login onLogin={(tok) => { setToken(tok); setPage("doctors"); }} />
-            <p>
-              Don't have an account?{" "}
-              <button onClick={() => setPage("signup")}>Signup</button>
-            </p>
-          </>
-        ) : (
-          <>
-            <Signup onSignup={() => setPage("login")} />
-            <p>
-              Have an account?{" "}
-              <button onClick={() => setPage("login")}>Login</button>
-            </p>
-          </>
-        )}
-      </>
-    );
-  }
-
-  // Render based on page state
   return (
-    <div style={{ maxWidth: 700, margin: "auto", padding: 20, fontFamily: "Arial, sans-serif" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Doctor Booking Platform</h1>
-        <div>
-          <span>Role: {userRole}</span>
-          <button onClick={logout} style={{ marginLeft: 10 }}>Logout</button>
-        </div>
-      </div>
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: 20 }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>Doctor Booking</h2>
+        <nav style={{ display: "flex", gap: 10 }}>
+          {token && <button onClick={() => setPage("doctors")}>Find Doctors</button>}
+          {token && <button onClick={() => setPage("dashboard")}>My Appointments</button>}
+          {token && userRole === "admin" && <button onClick={() => setPage("admin")}>Admin</button>}
+          {!token && <button onClick={() => setPage("login")}>Login</button>}
+          {!token && <button onClick={() => setPage("signup")}>Signup</button>}
+          {token && <button onClick={handleLogout}>Logout</button>}
+        </nav>
+      </header>
+      <hr/>
+
+      {page === "login" && <Login onLogin={handleLogin} onGoSignup={() => setPage("signup")} />}
+      {page === "signup" && <Signup onSignup={() => setPage("login")} />}
 
       {page === "doctors" && (
-        <>
-          <DoctorDiscovery
-            onSelectDoctor={(id) => {
-              setSelectedDoctorId(id);
-              setPage("slots");
-            }}
-          />
-          <button onClick={() => setPage("dashboard")} style={{ marginTop: 20 }}>
-            View My Appointments
-          </button>
-
-          {/* Show admin button if user role is admin */}
-          {userRole === "admin" && (
-            <button onClick={() => setPage("admin")} style={{ marginLeft: 20 }}>
-              Admin Panel
-            </button>
-          )}
-        </>
+        <DoctorDiscovery
+          onSelectDoctor={(id) => { setSelectedDoctorId(id); setPage("slots"); }}
+        />
       )}
-
       {page === "slots" && (
-        <SlotPicker doctorId={selectedDoctorId} patientId={patientId} onBack={() => setPage("doctors")} />
+        <SlotPicker
+          doctorId={selectedDoctorId}
+          patientId={patientId}
+          onBack={() => setPage("doctors")}
+        />
       )}
-
       {page === "dashboard" && (
-        <AppointmentDashboard patientId={patientId} onBack={() => setPage("doctors")} />
+        <AppointmentDashboard
+          patientId={patientId}
+          onBack={() => setPage("doctors")}
+        />
       )}
-
       {page === "admin" && userRole === "admin" && (
-        <AdminPanel onBack={() => setPage("doctors")} />
+        <AdminPanel />
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../services/api";
 
-export default function Login({ onLogin }) {
+export default function Login({ onLogin, onGoSignup }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
@@ -14,35 +14,21 @@ export default function Login({ onLogin }) {
     setError("");
     try {
       const res = await api.post("/auth/login", form);
-      localStorage.setItem("token", res.data.token);
       onLogin(res.data.token);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed.");
+      setError(err?.response?.data?.message || "Login failed");
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "auto" }}>
-      <h2>Login</h2>
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit" style={{ marginTop: 10 }}>
-        Login
-      </button>
+    <form onSubmit={handleSubmit}>
+      <h3>Login</h3>
+      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+      <br />
+      <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+      <br />
+      <button type="submit">Login</button>
+      <button type="button" onClick={onGoSignup} style={{ marginLeft: 8 }}>Create account</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
