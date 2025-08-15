@@ -5,6 +5,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import doctorRoutes from './routes/doctor.js';
 import appointmentRoutes from './routes/appointment.js';
+import adminRoutes from './routes/admin.js';
+
 
 
 
@@ -24,6 +26,7 @@ app.use('/api/doctors', doctorRoutes);
 
 app.use('/api/appointments', appointmentRoutes);
 
+app.use('/api/admin', adminRoutes);
 
 // Simple root endpoint to check server running status
 app.get('/', (req, res) => {
