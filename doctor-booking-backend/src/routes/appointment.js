@@ -3,7 +3,8 @@ import {
   lockSlotController,
   confirmBookingController,
   rescheduleAppointmentController,
-  cancelAppointmentController
+  cancelAppointmentController,
+  listAppointmentsController
 } from '../controllers/appointmentController.js';
 
 const router = express.Router();
@@ -19,5 +20,8 @@ router.patch('/:id/reschedule', rescheduleAppointmentController);
 
 // PATCH /api/appointments/:id/cancel
 router.patch('/:id/cancel', cancelAppointmentController);
+
+// GET /api/appointments
+router.get('/', listAppointmentsController);
 
 export default router;
