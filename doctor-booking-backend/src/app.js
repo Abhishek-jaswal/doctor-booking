@@ -1,39 +1,54 @@
 // Main server file: Configures Express app and routes
-
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import doctorRoutes from './routes/doctor.js';
 import appointmentRoutes from './routes/appointment.js';
 import adminRoutes from './routes/admin.js';
-
-
-
-
 import authRoutes from './routes/auth.js';
+import { releaseExpiredLocks } from './models/appointmentModel.js';
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());                  // Enable Cross-Origin requests (allow frontend to connect)
-app.use(express.json());          // Parse JSON request bodies
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
-// Mount auth routes under /api/auth
+// Routes
 app.use('/api/auth', authRoutes);
-
 app.use('/api/doctors', doctorRoutes);
-
 app.use('/api/appointments', appointmentRoutes);
-
 app.use('/api/admin', adminRoutes);
 
-// Simple root endpoint to check server running status
-app.get('/', (req, res) => {
+// Health check
+app.get('/', (_req, res) => {
   res.send('Doctor Booking API is running');
 });
 
-// Start server on port specified in .env
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+// 404 handler
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
+// Error handler
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ message: 'Internal server error' });
+});
+
+// Background job: periodically release expired slot locks
+setInterval(async () => {
+  try {
+    await releaseExpiredLocks();
+  } catch (e) {
+    console.error('Failed releasing expired locks:', e);
+  }
+}, 60 * 1000); // every 1 minute
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
