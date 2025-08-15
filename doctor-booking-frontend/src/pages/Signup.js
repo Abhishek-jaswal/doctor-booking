@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../services/api";
 
-function Signup({ onSignup }) {
+export default function Signup({ onSignup }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -14,21 +14,20 @@ function Signup({ onSignup }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    api
-      .post("/auth/signup", form)
-      .then(() => {
-        setMessage("Signup successful! Please log in.");
-        onSignup();
-      })
-      .catch((err) => {
-        setMessage("Signup failed: " + (err.response?.data?.message || "Error"));
-      });
+    setMessage("");
+    try {
+      await api.post("/auth/signup", form);
+      setMessage("Signup successful! Please log in.");
+      onSignup();
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Signup failed.");
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "auto" }}>
       <h2>Signup</h2>
       <input
         name="name"
@@ -57,10 +56,10 @@ function Signup({ onSignup }) {
         <option value="patient">Patient</option>
         <option value="doctor">Doctor</option>
       </select>
-      <button type="submit">Sign Up</button>
-      {message && <div style={{ color: "red" }}>{message}</div>}
+      <button type="submit" style={{ marginTop: 10 }}>
+        Sign Up
+      </button>
+      {message && <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>}
     </form>
   );
 }
-
-export default Signup;

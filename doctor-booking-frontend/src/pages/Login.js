@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../services/api";
 
-function Login({ onLogin }) {
+export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
@@ -9,22 +9,20 @@ function Login({ onLogin }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    api
-      .post("/auth/login", form)
-      .then((res) => {
-        localStorage.setItem("token", res.data.token);
-        // Decode token to extract user info if needed
-        onLogin(res.data.token);
-      })
-      .catch((err) => {
-        setError("Login failed: " + (err.response?.data?.message || "Error"));
-      });
+    setError("");
+    try {
+      const res = await api.post("/auth/login", form);
+      localStorage.setItem("token", res.data.token);
+      onLogin(res.data.token);
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed.");
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "auto" }}>
       <h2>Login</h2>
       <input
         name="email"
@@ -42,10 +40,10 @@ function Login({ onLogin }) {
         onChange={handleChange}
         required
       />
-      <button type="submit">Login</button>
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      <button type="submit" style={{ marginTop: 10 }}>
+        Login
+      </button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 }
-
-export default Login;
