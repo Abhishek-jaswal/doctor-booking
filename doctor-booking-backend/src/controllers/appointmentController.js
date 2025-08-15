@@ -121,3 +121,32 @@ export async function cancelAppointmentController(req, res) {
     res.status(500).json({ message: 'Failed to cancel appointment' });
   }
 }
+// Get appointments for a patient, optionally filter by status
+export async function listAppointmentsController(req, res) {
+  const { patientId, status } = req.query;
+
+  if (!patientId) return res.status(400).json({ message: 'patientId is required' });
+
+  try {
+    let query = `
+      SELECT a.*, s.start_time, s.end_time, u.name AS doctor_name
+      FROM appointments a
+      JOIN slots s ON a.slot_id = s.id
+      JOIN doctors d ON a.doctor_id = d.id
+      JOIN users u ON d.user_id = u.id
+      WHERE a.patient_id = $1
+    `;
+    const params = [patientId];
+    if (status) {
+      query += ` AND a.status = $2`;
+      params.push(status);
+    }
+    query += ` ORDER BY s.start_time DESC`;
+
+    const { rows } = await pool.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching appointments:', err);
+    res.status(500).json({ message: 'Failed to fetch appointments' });
+  }
+}
