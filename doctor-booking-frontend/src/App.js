@@ -1,46 +1,82 @@
-// src/App.js
 import React, { useState } from "react";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import DoctorDiscovery from "./pages/DoctorDiscovery";
 import SlotPicker from "./pages/SlotPicker";
 import AppointmentDashboard from "./pages/AppointmentDashboard";
 import "./App.css";
 
 function App() {
-  const [view, setView] = useState("doctors");
+  // Read token from localStorage to persist login across reloads
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [page, setPage] = useState("login");
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
-  // Hardcoded patientId for testing — in real app, from login
-  const patientId = 2;
+  // Decode JWT (very basic, production apps use a library)
+  function getUserIdFromToken() {
+    if (!token) return null;
+    try {
+      const base = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base)).id;
+    } catch (_) {
+      return null;
+    }
+  }
+  const patientId = getUserIdFromToken();
+
+  // Log out user
+  function logout() {
+    setToken("");
+    localStorage.removeItem("token");
+    setPage("login");
+  }
+
+  if (!token) {
+    return page === "login" ? (
+      <div>
+        <Login
+          onLogin={(jwt) => { setToken(jwt); setPage("doctors"); }}
+        />
+        <button onClick={() => setPage("signup")}>Go to Signup</button>
+      </div>
+    ) : (
+      <div>
+        <Signup
+          onSignup={() => setPage("login")}
+        />
+        <button onClick={() => setPage("login")}>Go to Login</button>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
       <h1>Doctor Booking Platform</h1>
+      <button style={{ float: "right" }} onClick={logout}>Logout</button>
 
-      {view === "doctors" && (
+      {page === "doctors" && (
         <>
           <DoctorDiscovery
             onSelectDoctor={(id) => {
               setSelectedDoctorId(id);
-              setView("slots");
+              setPage("slots");
             }}
           />
-          <button style={{ marginTop: "20px" }} onClick={() => setView("dashboard")}>
+          <button style={{ marginTop: "20px" }} onClick={() => setPage("dashboard")}>
             View My Appointments
           </button>
         </>
       )}
-
-      {view === "slots" && (
+      {page === "slots" && (
         <SlotPicker
           doctorId={selectedDoctorId}
-          onBack={() => setView("doctors")}
+          onBack={() => setPage("doctors")}
         />
       )}
-
-      {view === "dashboard" && (
+      {page === "dashboard" && (
         <AppointmentDashboard
           patientId={patientId}
-          onBack={() => setView("doctors")}
+          onBack={() => setPage("doctors")}
         />
       )}
     </div>
