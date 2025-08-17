@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../services/api";
 
+
 export default function AdminPanel() {
   const [doctorForm, setDoctorForm] = useState({
     name: "",
@@ -55,45 +56,46 @@ export default function AdminPanel() {
   }
 
   return (
-    <div>
-      <h3>Admin Panel</h3>
-      <form onSubmit={submitDoctor}>
-        <h4>Add Doctor</h4>
-        <input name="name" placeholder="Name" value={doctorForm.name} onChange={handleDoctorChange} required />
-        <input name="email" type="email" placeholder="Email" value={doctorForm.email} onChange={handleDoctorChange} required />
-        <input name="password" type="password" placeholder="Password" value={doctorForm.password} onChange={handleDoctorChange} required />
-        <input name="specialization" placeholder="Specialization" value={doctorForm.specialization} onChange={handleDoctorChange} required />
-        <select name="mode" value={doctorForm.mode} onChange={handleDoctorChange}>
+    <div className="admin-container">
+      <h2 className="admin-title">Admin Panel</h2>
+
+      <form onSubmit={submitDoctor} className="admin-form">
+        <h3 className="form-title">Add Doctor</h3>
+        <input name="name" placeholder="Name" value={doctorForm.name} onChange={handleDoctorChange} required className="form-input" />
+        <input name="email" type="email" placeholder="Email" value={doctorForm.email} onChange={handleDoctorChange} required className="form-input" />
+        <input name="password" type="password" placeholder="Password" value={doctorForm.password} onChange={handleDoctorChange} required className="form-input" />
+        <input name="specialization" placeholder="Specialization" value={doctorForm.specialization} onChange={handleDoctorChange} required className="form-input" />
+        <select name="mode" value={doctorForm.mode} onChange={handleDoctorChange} className="form-input">
           <option value="online">Online</option>
           <option value="in-person">In Person</option>
         </select>
-        <button type="submit" style={{ marginLeft: 8 }}>Add Doctor</button>
-        {doctorMessage && <p>{doctorMessage}</p>}
+        <button type="submit" className="btn-primary">Add Doctor</button>
+        {doctorMessage && <p className="form-message">{doctorMessage}</p>}
       </form>
 
-      <hr />
-
-      <form onSubmit={submitSlot}>
-        <h4>Add Slot</h4>
-        <label>
+      <form onSubmit={submitSlot} className="admin-form">
+        <h3 className="form-title">Add Slot</h3>
+        <label className="form-label">
           Doctor:
-          <select value={selectedDoctorId} onChange={(e) => setSelectedDoctorId(e.target.value)}>
+          <select value={selectedDoctorId} onChange={(e) => setSelectedDoctorId(e.target.value)} className="form-input">
             <option value="">Select...</option>
             {doctors.map((d) => (
-              <option key={d.id} value={d.id}>{d.doctor_name} — {d.specialization}</option>
+              <option key={d.id} value={d.id}>
+                {d.doctor_name} — {d.specialization}
+              </option>
             ))}
           </select>
         </label>
-        <label style={{ marginLeft: 8 }}>
+        <label className="form-label">
           Start
-          <input type="datetime-local" name="start_time" value={slotForm.start_time} onChange={handleSlotChange} required />
+          <input type="datetime-local" name="start_time" value={slotForm.start_time} onChange={handleSlotChange} required className="form-input" />
         </label>
-        <label style={{ marginLeft: 8 }}>
+        <label className="form-label">
           End
-          <input type="datetime-local" name="end_time" value={slotForm.end_time} onChange={handleSlotChange} required />
+          <input type="datetime-local" name="end_time" value={slotForm.end_time} onChange={handleSlotChange} required className="form-input" />
         </label>
-        <button type="submit" style={{ marginLeft: 8 }}>Add Slot</button>
-        {slotMessage && <p>{slotMessage}</p>}
+        <button type="submit" className="btn-primary">Add Slot</button>
+        {slotMessage && <p className="form-message">{slotMessage}</p>}
       </form>
     </div>
   );
