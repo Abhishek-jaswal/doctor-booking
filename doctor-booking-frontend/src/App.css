@@ -1,9 +1,75 @@
-.App {
+/* App.css */
+
+/* General Layout */
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
   font-family: Arial, sans-serif;
-  margin: 20px;
+  color: #333;
 }
 
-input, select, button {
-  margin: 5px;
-  padding: 5px;
+/* Header */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1976d2;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.app-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Navigation */
+.navbar {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  padding: 8px 14px;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-button:hover {
+  background: #1565c0;
+}
+
+.nav-button.active {
+  background: #1565c0;
+}
+
+.nav-button.logout {
+  background: #e53935;
+}
+
+.nav-button.logout:hover {
+  background: #c62828;
+}
+
+/* Divider */
+.divider {
+  margin: 20px 0;
+  border: 1px solid #eee;
+}
+
+/* Page Content */
+.page-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
 }
