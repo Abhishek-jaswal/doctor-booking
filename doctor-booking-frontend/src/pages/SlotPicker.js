@@ -54,21 +54,33 @@ export default function SlotPicker({ doctorId, patientId, onBack }) {
   }
 
   return (
-    <div>
-      <button onClick={onBack}>← Back</button>
+    <div className="slot-picker">
+      <button className="back-btn" onClick={onBack}>← Back</button>
       <h3>Available Slots</h3>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {slots.map(slot => (
-          <li key={slot.id}>
-            {new Date(slot.start_time).toLocaleString()} — {new Date(slot.end_time).toLocaleString()}{" "}
-            <button onClick={() => handleLock(slot.id)}>Lock</button>
+      {loading && <p className="loading">Loading...</p>}
+      {error && <p className="error">{error}</p>}
+      <ul className="slot-list">
+        {slots.map((slot) => (
+          <li
+            key={slot.id}
+            className={`slot-card ${selectedSlot === slot.id ? "selected" : ""}`}
+          >
+            <span>
+              {new Date(slot.start_time).toLocaleString()} —{" "}
+              {new Date(slot.end_time).toLocaleString()}
+            </span>
+            <button
+              className="lock-btn"
+              onClick={() => handleLock(slot.id)}
+              disabled={locked && selectedSlot === slot.id}
+            >
+              {locked && selectedSlot === slot.id ? "Locked" : "Lock"}
+            </button>
           </li>
         ))}
       </ul>
       {locked && (
-        <button style={{ marginTop: 10 }} onClick={handleConfirm}>
+        <button className="confirm-btn" onClick={handleConfirm}>
           Confirm Booking (Mock OTP)
         </button>
       )}

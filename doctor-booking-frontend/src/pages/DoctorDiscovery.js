@@ -24,24 +24,36 @@ export default function DoctorDiscovery({ onSelectDoctor }) {
   useEffect(() => { fetchDoctors(); }, []);
 
   return (
-    <div>
+    <div className="doctor-discovery">
       <h3>Find a Doctor</h3>
-      <div style={{ display: "flex", gap: 8 }}>
-        <input placeholder="Specialization" value={specialization} onChange={e => setSpecialization(e.target.value)} />
-        <select value={mode} onChange={e => setMode(e.target.value)}>
+      <div className="filters">
+        <input
+          placeholder="Specialization"
+          value={specialization}
+          onChange={(e) => setSpecialization(e.target.value)}
+        />
+        <select value={mode} onChange={(e) => setMode(e.target.value)}>
           <option value="">Any mode</option>
           <option value="online">Online</option>
           <option value="in-person">In Person</option>
         </select>
         <button onClick={fetchDoctors}>Search</button>
       </div>
-      {loading && <p>Loading doctors...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {doctors.map(doc => (
-          <li key={doc.id}>
-            <strong>{doc.doctor_name}</strong> — {doc.specialization} ({doc.mode}){" "}
-            <button onClick={() => onSelectDoctor(doc.id)}>View Slots</button>
+      {loading && <p className="loading">Loading doctors...</p>}
+      {error && <p className="error">{error}</p>}
+      <ul className="doctor-list">
+        {doctors.map((doc) => (
+          <li key={doc.id} className="doctor-card">
+            <div>
+              <strong>{doc.doctor_name}</strong> <br />
+              <span>{doc.specialization} ({doc.mode})</span>
+            </div>
+            <button
+              className="view-btn"
+              onClick={() => onSelectDoctor(doc.id)}
+            >
+              View Slots
+            </button>
           </li>
         ))}
       </ul>

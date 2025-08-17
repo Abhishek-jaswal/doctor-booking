@@ -1,0 +1,206 @@
+.doctor-discovery {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f9f9f9;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.doctor-discovery h3 {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.filters input,
+.filters select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filters button {
+  background: #007bff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.filters button:hover {
+  background: #0056b3;
+}
+
+.loading {
+  color: #555;
+  font-style: italic;
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+}
+
+.doctor-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doctor-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+}
+
+.doctor-card strong {
+  font-size: 16px;
+  color: #222;
+}
+
+.doctor-card span {
+  font-size: 14px;
+  color: #555;
+}
+
+.view-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.view-btn:hover {
+  background: #1e7e34;
+}
+
+
+.slot-picker {
+  max-width: 650px;
+  margin: 20px auto;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fafafa;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.slot-picker h3 {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #007bff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.slot-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slot-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+  transition: background 0.2s;
+}
+
+.slot-card:hover {
+  background: #f1f9ff;
+}
+
+.slot-card.selected {
+  border: 2px solid #007bff;
+}
+
+.slot-card span {
+  font-size: 14px;
+  color: #333;
+}
+
+.lock-btn {
+  background: #ffc107;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.lock-btn:hover {
+  background: #e0a800;
+}
+
+.lock-btn:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
+
+.confirm-btn {
+  display: block;
+  width: 100%;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.confirm-btn:hover {
+  background: #218838;
+}

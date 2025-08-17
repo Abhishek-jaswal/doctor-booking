@@ -6,6 +6,8 @@ import SlotPicker from "./pages/SlotPicker";
 import AppointmentDashboard from "./pages/AppointmentDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import "./App.css"; 
+import "./DoctorDiscovery.css";
+
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");

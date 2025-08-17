@@ -1,4 +1,3 @@
-// src/pages/AppointmentDashboard.js
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 
@@ -37,28 +36,59 @@ function AppointmentDashboard({ patientId, onBack }) {
   }
 
   return (
-    <div>
-      <button onClick={onBack}>← Back</button>
-      <h3>My Appointments</h3>
-      <label>
-        Filter:
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="">All</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="canceled">Canceled</option>
-        </select>
-      </label>
-      <ul>
+    <div className="dashboard-container">
+      <button className="btn-back" onClick={onBack}>← Back</button>
+      <h2 className="dashboard-title">My Appointments</h2>
+
+      <div className="filter-container">
+        <label className="filter-label">
+          Filter:
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="filter-select"
+          >
+            <option value="">All</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="canceled">Canceled</option>
+          </select>
+        </label>
+      </div>
+
+      <ul className="appointment-list">
         {appointments.map((appt) => (
-          <li key={appt.id} style={{ marginBottom: 12 }}>
-            {new Date(appt.start_time).toLocaleString()} — {appt.status}
-            <span style={{ marginLeft: 12 }}>
-              <button onClick={() => startReschedule(appt)}>Reschedule</button>
-              <button onClick={() => cancelAppt(appt.id)} style={{ marginLeft: 6 }}>Cancel</button>
-            </span>
+          <li key={appt.id} className="appointment-card">
+            <div className="appointment-info">
+              <span className="appointment-time">
+                {new Date(appt.start_time).toLocaleString()}
+              </span>
+              <span className={`appointment-status ${appt.status}`}>
+                {appt.status}
+              </span>
+            </div>
+            <div className="appointment-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => startReschedule(appt)}
+              >
+                Reschedule
+              </button>
+              <button
+                className="btn-danger"
+                onClick={() => cancelAppt(appt.id)}
+              >
+                Cancel
+              </button>
+            </div>
+
             {slotChoices[appt.id] && (
-              <span style={{ display: "block", marginTop: 8 }}>
-                <select onChange={(e) => confirmReschedule(appt.id, appt.doctor_id, Number(e.target.value))}>
+              <div className="reschedule-box">
+                <select
+                  className="slot-select"
+                  onChange={(e) =>
+                    confirmReschedule(appt.id, appt.doctor_id, Number(e.target.value))
+                  }
+                >
                   <option value="">Choose new slot</option>
                   {slotChoices[appt.id].map((s) => (
                     <option key={s.id} value={s.id}>
@@ -67,12 +97,17 @@ function AppointmentDashboard({ patientId, onBack }) {
                   ))}
                 </select>
                 <button
-                  style={{ marginLeft: 6 }}
-                  onClick={() => setSlotChoices((sc) => { const { [appt.id]: omit, ...rest } = sc; return rest; })}
+                  className="btn-cancel-choice"
+                  onClick={() =>
+                    setSlotChoices((sc) => {
+                      const { [appt.id]: omit, ...rest } = sc;
+                      return rest;
+                    })
+                  }
                 >
                   Cancel
                 </button>
-              </span>
+              </div>
             )}
           </li>
         ))}
