@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import api from "../services/api";
 
+
+
 export default function Signup({ onSignup }) {
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "patient" });
   const [message, setMessage] = useState("");
@@ -22,24 +24,49 @@ export default function Signup({ onSignup }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Signup</h3>
-      <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-      <br />
-      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-      <br />
-      <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-      <br />
-      <label>
-        Role:
-        <select name="role" value={form.role} onChange={handleChange}>
-          <option value="patient">Patient</option>
-          <option value="doctor">Doctor</option>
-        </select>
-      </label>
-      <br />
-      <button type="submit">Sign Up</button>
-      {message && <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>}
-    </form>
+    <div className="signup-container">
+      <form onSubmit={handleSubmit} className="signup-form">
+        <h3 className="signup-title">Create an Account</h3>
+        <input
+          className="signup-input"
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="signup-input"
+          name="email"
+          type="email"
+          placeholder="Email Address"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="signup-input"
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+        <label className="signup-label">
+          Role:
+          <select className="signup-select" name="role" value={form.role} onChange={handleChange}>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+          </select>
+        </label>
+        <button type="submit" className="signup-btn">Sign Up</button>
+        {message && (
+          <p className={`signup-message ${message.includes("successful") ? "success" : "error"}`}>
+            {message}
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
