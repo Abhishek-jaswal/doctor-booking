@@ -35,7 +35,7 @@ export async function confirmBooking(patientId, doctorId, slotId) {
     // Create appointment
     const apptRes = await pool.query(
       `INSERT INTO appointments (patient_id, doctor_id, slot_id, status)
-       VALUES ($1,$2,$3,'confirmed') RETURNING *`,
+       VALUES ($1,$2,$3,'booked') RETURNING *`,
       [patientId, doctorId, slotId]
     );
     await pool.query('COMMIT');
