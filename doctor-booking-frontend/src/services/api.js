@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: process.env.REACT_APP_API_URL, 
+ baseURL: https://doctor-booking-dbt7.onrender.com, 
 });
 
 api.interceptors.request.use(config => {
