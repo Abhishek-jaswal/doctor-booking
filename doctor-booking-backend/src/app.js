@@ -14,8 +14,9 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: ["https://doctor-booking-sigma.vercel.app/"], // put your deployed Vercel frontend URL
-  methods: ["GET","POST","PUT","DELETE"],
+  origin: ["https://doctor-booking-sigma.vercel.app"], // 👈 your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
