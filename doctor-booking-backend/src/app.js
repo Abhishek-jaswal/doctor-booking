@@ -13,7 +13,12 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ["https://doctor-booking-sigma.vercel.app/"], // put your deployed Vercel frontend URL
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Routes

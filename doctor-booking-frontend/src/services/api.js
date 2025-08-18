@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: 'https://doctor-booking-dbt7.onrender.com'
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api"
 });
+
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem("token");
